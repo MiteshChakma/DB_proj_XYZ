@@ -15,8 +15,10 @@ class User(AbstractUser):
     )
 
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, null=True, verbose_name="Role")
-
     location = models.CharField(max_length=100, blank=True, null=True, verbose_name="Location")
+
+    def is_role(self, role):
+        return self.role == role
 
     def is_administrator(self):
         return self.role == self.ADMINISTRATOR

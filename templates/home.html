@@ -2,14 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Choose your region</title>
 </head>
 <body>
-    <h1> Welcome! Choose your country </h1>
-    <form action="{% url 'redirect_to_country' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" name="country" value="Finland">Finland</button>
-        <button type="submit" name="country" value="Sweden">Sweden</button>
-    </form>
+    <h1> Welcome! {{ user.username }} </h1>
+
 </body>
 </html>

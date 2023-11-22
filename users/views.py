@@ -4,6 +4,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import User  
 from django.http import HttpResponseRedirect
+from django.contrib import messages
+from .forms import CustomUserCreationForm
+from django.contrib.auth import login as auth_login
+
+
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
 # Import your User model
 
 # Helper function to check roles
@@ -49,11 +59,13 @@ def login_view(request):
 
         if user is not None:
             auth_login(request, user)
+            messages.success(request, 'Login successful!')
 
+            # Redirect based on user role
             if user.is_administrator():
                 return redirect('admin_dashboard')
             elif user.is_customer():
-                return redirect('customer_dashboard')
+                return redirect('home')  # Redirecting customers to product page
             elif user.is_customer_service():
                 return redirect('customer_service_dashboard')
             elif user.is_db_administrator():
@@ -61,34 +73,50 @@ def login_view(request):
             else:
                 return redirect('default_page')
         else:
-            # Handle invalid login here
-            pass
+            messages.error(request, 'Invalid login credentials. Please register if you do not have an account.')
+            return redirect('register')
 
     return render(request, 'login.html')
 
 # Register View
-from .forms import CustomUserCreationForm
-from django.contrib.auth import login as auth_login
 
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
 
-            # Assign a role to the user if necessary
-            user.role = User.CUSTOMER  # For example
+            # Directly use the integer value for 'Customer' role
+            user.role = 2  # Assuming '2' is the value for 'Customer' in ROLE_CHOICES
             user.save()
 
             auth_login(request, user)
+            messages.success(request, 'Registration successful! Welcome to our platform.')
 
-            # Redirect based on user role
-            return redirect('appropriate_dashboard')
+            return redirect('home')  # Redirect to customer dashboard
+        else:
+            messages.error(request, 'Registration failed. Please check your input.')
+
     else:
         form = CustomUserCreationForm()
 
     return render(request, 'register.html', {'form': form})
 
+
+# Dashboard Views
+@login_required
+@user_passes_test(is_customer)
+def customer_dashboard(request):
+    return render(request, 'customer_dashboard.html')
+
+
+def region_dashboard(request, country):
+    if country.lower() == 'finland':
+        return render(request, 'finland_dashboard.html')
+    elif country.lower() == 'sweden':
+        return render(request, 'sweden_dashboard.html')
+    else:
+        return redirect('error_page')
 
 
 def redirect_to_country(request):
@@ -116,4 +144,7 @@ def error_page(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def landing_page(request):
+    return render(request, 'landing_page.html')
 

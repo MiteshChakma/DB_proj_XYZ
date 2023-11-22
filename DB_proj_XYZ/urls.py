@@ -26,26 +26,35 @@ urlpatterns = [
 
     # Paths for user dashboards
     path('dashboard/customer/', views.customer_dashboard, name='customer_dashboard'),
-    path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('dashboard/admin_dash/', views.admin_dashboard, name='admin_dashboard'),
     path('dashboard/customer-service/', views.customer_service_dashboard, name='customer_service_dashboard'),
     path('dashboard/dba/', views.dba_dashboard, name='dba_dashboard'),
 
-    # Paths for authentication
-    path('login/', views.login_view, name='login'),
-    path('register/', views.register_view, name='register'),
-    #path('', views.login_view, name='login'),
+    # # Paths for authentication
+    # path('login/', views.login_view, name='login'),
+    # path('register/', views.register_view, name='register'),
+    # #path('', views.login_view, name='login'),
 
-    # Add other paths as needed
+    # # Add other paths as needed
 
-    path('country_redirect/', views.redirect_to_country, name='redirect_to_country'),
+    # path('country_redirect/', views.redirect_to_country, name='redirect_to_country'),
 
     
-    path('finland_dashboard/', views.finland_dashboard, name='finland_dashboard'),
-    path('sweden_dashboard/', views.sweden_dashboard, name='sweden_dashboard'),
-    #error page
-    path('error/', views.error_page, name='error_page'),
+    # path('finland_dashboard/', views.finland_dashboard, name='finland_dashboard'),
+    # path('sweden_dashboard/', views.sweden_dashboard, name='sweden_dashboard'),
+    # #error page
+    # path('error/', views.error_page, name='error_page'),
 
-    #home page
-    path('', views.home, name='home'),
+    # #home page
+    # path('', views.home, name='home'),
+
+    path('admin/', admin.site.urls),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
+    path('country_redirect/', views.redirect_to_country, name='redirect_to_country'),
+    path('<str:country>_dashboard/', views.region_dashboard, name='region_dashboard'),
+    path('error/', views.error_page, name='error_page'),
+    path('home/', views.home, name='home'),
+    path('', views.landing_page, name='landing_page'),
 ]
 
