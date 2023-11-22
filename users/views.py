@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import User  # Import your User model
+from .models import User  
+from django.http import HttpResponseRedirect
+# Import your User model
 
 # Helper function to check roles
 def is_customer(user):
@@ -86,3 +88,32 @@ def register_view(request):
         form = CustomUserCreationForm()
 
     return render(request, 'register.html', {'form': form})
+
+
+
+def redirect_to_country(request):
+    if request.method == 'POST':
+        country = request.POST.get('country')
+
+        if country == 'Finland':
+            # Logic to connect to Finland's DB or redirect to Finland's dashboard
+            return HttpResponseRedirect('/finland_dashboard/')
+        elif country == 'Sweden':
+            # Logic to connect to Sweden's DB or redirect to Sweden's dashboard
+            return HttpResponseRedirect('/sweden_dashboard/')
+    else:
+        # Redirect back to the choice page or to an error page
+        return HttpResponseRedirect('/error/')
+
+def finland_dashboard(request):
+    return render(request, 'finland_dashboard.html')
+
+def sweden_dashboard(request):
+    return render(request, 'sweden_dashboard.html')
+
+def error_page(request):
+    return render(request, 'error.html')
+
+def home(request):
+    return render(request, 'home.html')
+

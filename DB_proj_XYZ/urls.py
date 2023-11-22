@@ -33,8 +33,19 @@ urlpatterns = [
     # Paths for authentication
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('', views.login_view, name='login'),
+    #path('', views.login_view, name='login'),
 
     # Add other paths as needed
+
+    path('country_redirect/', views.redirect_to_country, name='redirect_to_country'),
+
+    
+    path('finland_dashboard/', views.finland_dashboard, name='finland_dashboard'),
+    path('sweden_dashboard/', views.sweden_dashboard, name='sweden_dashboard'),
+    #error page
+    path('error/', views.error_page, name='error_page'),
+
+    #home page
+    path('', views.home, name='home'),
 ]
 
