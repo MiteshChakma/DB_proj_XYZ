@@ -58,6 +58,9 @@ will use a distributed database.
 ## Project structure 
 To understand the project structure please refer to project_structure.md file and read the docs form the docs folder.
 
+## Project structure 
+To understand the project structure please refer to project_structure.md file and read the docs form the docs folder.
+
 ## Usage
 [Provide instructions on how to use your application. This could include steps to navigate through the application, how to create an account (if applicable), and any other relevant usage information.]
 
