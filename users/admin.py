@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, CustomerProfile, Order, Cart, Wishlist, Review, Address, CustomerServiceProfile, DatabaseAdministratorProfile
+from .models import User, CustomerProfile, Order, Cart, Wishlist, Review, Address, StaffProfile, DatabaseAdministratorProfile
 
 # Customizing the UserAdmin to include our new fields
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ['username', 'email', 'role', 'is_staff', 'is_active']
-    list_filter = ['role', 'is_staff', 'is_active']
+    list_display = ['username', 'email', 'role', 'is_active']
+    list_filter = ['role', 'is_active']
     fieldsets = UserAdmin.fieldsets + (
             (None, {'fields': ('role',)}),
     )
@@ -20,11 +20,11 @@ class CustomerProfileAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__email']
     list_filter = ['preferred_payment_method', 'preferred_shipping_method']
 
-# Admin for CustomerServiceProfile
-class CustomerServiceProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'service_area', 'service_rating']
+# Admin for StaffProfile
+class StaffProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'store', 'rating']
     search_fields = ['user__username']
-    list_filter = ['service_area']
+    list_filter = ['store']
 
 # Admin for DatabaseAdministratorProfile
 class DatabaseAdministratorProfileAdmin(admin.ModelAdmin):
@@ -41,7 +41,7 @@ class AddressAdmin(admin.ModelAdmin):
 # Registering models with their respective admin classes
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(CustomerProfile, CustomerProfileAdmin)
-admin.site.register(CustomerServiceProfile, CustomerServiceProfileAdmin)
+admin.site.register(StaffProfile, StaffProfileAdmin)
 admin.site.register(DatabaseAdministratorProfile, DatabaseAdministratorProfileAdmin)
 admin.site.register(Address, AddressAdmin)
 

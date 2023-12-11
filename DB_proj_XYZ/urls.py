@@ -24,11 +24,6 @@ from users import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Paths for user dashboards
-    path('dashboard/customer/', views.customer_dashboard, name='customer_dashboard'),
-    path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
-    path('dashboard/customer-service/', views.customer_service_dashboard, name='customer_service_dashboard'),
-    path('dashboard/dba/', views.dba_dashboard, name='dba_dashboard'),
 
     # Paths for authentication
     path('login/', views.login_view, name='login'),

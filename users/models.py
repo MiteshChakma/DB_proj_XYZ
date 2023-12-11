@@ -4,13 +4,13 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     ADMINISTRATOR = 1
     CUSTOMER = 2
-    CUSTOMER_SERVICE = 3
+    STAFF = 3
     DB_ADMINISTRATOR = 4
 
     ROLE_CHOICES = (
         (ADMINISTRATOR, 'Administrator'),
         (CUSTOMER, 'Customer'),
-        (CUSTOMER_SERVICE, 'Customer Service'),
+        (STAFF, 'Staff'),
         (DB_ADMINISTRATOR, 'Database Administrator'),
     )
 
@@ -24,8 +24,8 @@ class User(AbstractUser):
     def is_customer(self):
         return self.role == self.CUSTOMER
 
-    def is_customer_service(self):
-        return self.role == self.CUSTOMER_SERVICE
+    def is_staff(self):
+        return self.role == self.STAFF
 
     def is_db_administrator(self):
         return self.role == self.DB_ADMINISTRATOR
@@ -82,6 +82,27 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.customer.username}"
+    
+class Store(models.Model):
+    city = models.CharField(max_length=100, blank=True, null=True, verbose_name="City")
+    country = models.CharField(max_length=100, blank=True, null=True, verbose_name="Country")
+    review = models.TextField(verbose_name="Review")
+    rating = models.IntegerField(verbose_name="Rating")
+    # additional fields 
+    # ...
+
+class Product(models.Model):
+    name = models.CharField(max_length=1024, verbose_name="Product Name")
+    price = models.IntegerField(verbose_name="Product Price")
+    rating = models.IntegerField(verbose_name="Product Rating")
+    review = models.TextField(verbose_name="Product Review")
+
+class Warehouse(models.Model):
+    store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name='warehouse', verbose_name="Warehouse")
+    product = models.ManyToManyField(Product, related_name='warehouse', verbose_name="Warehouse")
+    # additional fields 
+    # ...
+
 
 
 class Address(models.Model):
@@ -97,13 +118,13 @@ class Address(models.Model):
         return f"{self.user.username} - {self.get_address_type_display()} Address"
 
 
-class CustomerServiceProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_service_profile', verbose_name="User")
-    service_area = models.CharField(max_length=100, blank=True, null=True, verbose_name="Service Area")
-    service_rating = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True, verbose_name="Service Rating")
+class StaffProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile', verbose_name="User")
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store', verbose_name="Store")
+    rating = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True, verbose_name="Staff Rating")
 
     def __str__(self):
-        return f"{self.user.username}'s Service Profile"
+        return f"{self.user.username}'s Staff Profile"
 
 
 class DatabaseAdministratorProfile(models.Model):

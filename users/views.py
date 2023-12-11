@@ -16,27 +16,20 @@ def is_customer(user):
 def is_administrator(user):
     return user.is_administrator()
 
-def is_customer_service(user):
-    return user.is_customer_service()
+def is_staff(user):
+    return user.is_staff()
 
 def is_dba(user):
     return user.is_db_administrator()
 
 # Dashboard Views
-@login_required
-@user_passes_test(is_customer)
-def customer_dashboard(request):
-    return render(request, 'customer_dashboard.html')
+
 
 @login_required
 @user_passes_test(is_administrator)
 def admin_dashboard(request):
     return render(request, 'admin_dashboard.html')
 
-@login_required
-@user_passes_test(is_customer_service)
-def customer_service_dashboard(request):
-    return render(request, 'customer_service_dashboard.html')
 
 @login_required
 @user_passes_test(is_dba)
