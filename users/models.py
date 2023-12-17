@@ -68,16 +68,6 @@ class Store(models.Model):
     rating = models.IntegerField(verbose_name="Rating")
 
 
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses', verbose_name="User")
-    address_type = models.CharField(max_length=10, choices=[('shipping', 'Shipping'), ('billing', 'Billing')], verbose_name="Address Type")
-    street = models.CharField(max_length=1024, verbose_name="Street")
-    city = models.CharField(max_length=512, verbose_name="City")
-    state = models.CharField(max_length=512, verbose_name="State")
-    zip_code = models.CharField(max_length=20, verbose_name="Zip Code")
-    country = models.CharField(max_length=50, verbose_name="Country")
-
-
 class StaffProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff_profile', verbose_name="User")
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store', verbose_name="Store")

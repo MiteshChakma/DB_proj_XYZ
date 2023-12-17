@@ -82,6 +82,17 @@ def getProductsList(request):
         return HttpResponse(json.dumps({'stu':0,'message': 'Location is invalid'}))
 
 
+# Get product list view (using GET method)
+def getProductsListAdmin(request):
+    try:
+        if request.method == 'GET':
+            productList = list(Product.objects.using('default').filter().values())
+            return HttpResponse(json.dumps({'stu':1,'message': productList}))
+        return HttpResponse(json.dumps({'stu':0,'message': 'Server error'}))
+    except:
+        return HttpResponse(json.dumps({'stu':0,'message': 'Location is invalid'}))
+
+
 # Get product view (using GET method)
 def getProduct(request):
     try:
@@ -91,6 +102,61 @@ def getProduct(request):
         return HttpResponse(json.dumps({'stu':0,'message': 'Server error'}))
     except:
         return HttpResponse(json.dumps({'stu':0,'message': 'Product not found'}))
+    
+
+# Get stores view (using GET method)
+def getStores(request):
+    try:
+        if request.method == 'GET':
+            stores = list(Store.objects.using(request.GET.get('location')).filter().values())
+            return HttpResponse(json.dumps({'stu':1,'message': stores}))
+        return HttpResponse(json.dumps({'stu':0,'message': 'Server error'}))
+    except:
+        return HttpResponse(json.dumps({'stu':0,'message': 'Product not found'}))
+    
+
+# Update product view (using POST method and UPDATE query)
+def updateProduct(request):
+    try:
+        if request.method == 'POST':
+            if(request.POST.get('location')=='default'):
+                Product.objects.using('default').filter(pk=request.POST.get('id')).update(name=request.POST.get('name'),price=request.POST.get('price'))
+                ProductWarehouse.objects.using('default').filter(product__id=request.POST.get('id')).update(productAmount=request.POST.get('amount'))
+                return HttpResponse(json.dumps({'stu':1,'message': 'successful'}))
+            else:
+                try:
+                    Product.objects.using(request.POST.get('location')).filter(pID=request.POST.get('pID')).update(name=request.POST.get('name'),price=request.POST.get('price'))
+                    ProductWarehouse.objects.using(request.POST.get('location')).filter(warehouse__id=request.POST.get('warehouseId')).update(productAmount=request.POST.get('amount'))
+                    return HttpResponse(json.dumps({'stu':1,'message': 'successful'}))
+                except:
+                    product = Product.objects.using(request.POST.get('location')).create(name=request.POST.get('name'),price=request.POST.get('price'),pID=request.POST.get('pID'),rating=0)
+                    ProductWarehouse.objects.using(request.POST.get('location')).create(warehouse_id=request.POST.get('warehouseId'),product_id=product.id,productAmount = request.POST.get('amount'))
+                    return HttpResponse(json.dumps({'stu':1,'message': 'successful'}))
+        return HttpResponse(json.dumps({'stu':0,'message': 'Server error'}))
+    except Exception as e:
+        print(e)
+        return HttpResponse(json.dumps({'stu':0,'message': 'Product not found'}))
+    
+
+# Update product view (using POST method and INSERT query)
+def createProduct(request):
+    try:
+        if request.method == 'POST':
+            if(request.POST.get('location')=='default'):
+                product = Product.objects.using('default').create(name=request.POST.get('name'),price=request.POST.get('price'),rating=0)
+                id=product.pk
+                Product.objects.using('default').filter(pk=id).update(pID=id)
+                ProductWarehouse.objects.using('default').create(product_id=id,warehouse_id=1,productAmount = request.POST.get('amount'))
+                return HttpResponse(json.dumps({'stu':1,'message': id}))
+            else:
+                product = Product.objects.using(request.POST.get('location')).create(name=request.POST.get('name'),price=request.POST.get('price'),rating=0,pID=request.POST.get('pID'))
+                ProductWarehouse.objects.using(request.POST.get('location')).create(warehouse_id=request.POST.get('warehouseId'),product_id=product.pk,productAmount = request.POST.get('amount'))
+                return HttpResponse(json.dumps({'stu':1,'message': 'successful'}))
+        return HttpResponse(json.dumps({'stu':0,'message': 'Server error'}))
+    except Exception as e:
+        print(e)
+        return HttpResponse(json.dumps({'stu':0,'message': 'Product not found'}))
+    
 
 
 # Add product to shopping cart view (using POST method)
