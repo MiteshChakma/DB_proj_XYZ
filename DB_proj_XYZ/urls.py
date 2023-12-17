@@ -19,28 +19,25 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from users import views  
 
-# Import your views here
+
+# here are the URL paths
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
 
-
-    # Paths for authentication
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    #path('', views.login_view, name='login'),
+    path('product_list/', views.getProductsList, name='product_list'),
+    path('product/', views.getProduct, name='product'),
+    path('warehouse_list/', views.getWarehousesList, name='warehouse_list'),
+    path('warehouse/', views.getWarehouse, name='warehouse'),
+    path('product-warehouse/', views.getProductWarehouses, name='product-warehouse'),
+    path('product-store/', views.getProductStores, name='product-store'),
+    path('add-product-to-cart/', views.addProductToShoppingCart, name='add-product-to-cart'),
+    path('get-cart/', views.getShoppingCart, name='get-cart'),
+    path('delete-cart/', views.deleteCart, name='delete-cart'),
+    path('add-order/', views.addOrder, name='add-order'),
+    path('store_list/', views.getStoresList, name='store_list'),
+    path('store/', views.getStore, name='store'),
 
-    # Add other paths as needed
-
-    path('country_redirect/', views.redirect_to_country, name='redirect_to_country'),
-
-    
-    path('finland_dashboard/', views.finland_dashboard, name='finland_dashboard'),
-    path('sweden_dashboard/', views.sweden_dashboard, name='sweden_dashboard'),
-    #error page
-    path('error/', views.error_page, name='error_page'),
-
-    #home page
-    path('', views.home, name='home'),
 ]
 

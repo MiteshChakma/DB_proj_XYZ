@@ -5,9 +5,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+# there is a default version of user in Django, however we customized it based on our needs
 class CustomUserCreationForm(UserCreationForm):
-    # Add additional fields as required
     location = forms.CharField(required=True)
+    email = forms.CharField(required=True)
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -16,9 +17,12 @@ class CustomUserCreationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.location = self.cleaned_data['location']
+        user.email = self.cleaned_data['email']
         user.role = User.CUSTOMER
         status = ''
         if commit:
+            # checking the location of user to find the appropriate db to 
+            # get the user and register it
             if(user.location=='finland'):
                 userExistency = list(User.objects.using('finland').filter(username=user.username).values())
                 if(userExistency==[]):
