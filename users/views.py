@@ -126,7 +126,7 @@ def updateProduct(request):
             else:
                 try:
                     Product.objects.using(request.POST.get('location')).filter(pID=request.POST.get('pID')).update(name=request.POST.get('name'),price=request.POST.get('price'))
-                    ProductWarehouse.objects.using(request.POST.get('location')).filter(warehouse__id=request.POST.get('warehouseId')).update(productAmount=request.POST.get('amount'))
+                    ProductWarehouse.objects.using(request.POST.get('location')).filter(warehouse_id=request.POST.get('warehouseId')).update(productAmount=request.POST.get('amount'))
                     return HttpResponse(json.dumps({'stu':1,'message': 'successful'}))
                 except:
                     product = Product.objects.using(request.POST.get('location')).create(name=request.POST.get('name'),price=request.POST.get('price'),pID=request.POST.get('pID'),rating=0)
